@@ -21,16 +21,26 @@ function Logo() {
   return <h1>🏝️ Far Away 🧳</h1>;
 }
 function Form() {
-  // Ex.12 透過綁定狀態變數，操控表單元素的值
+  // Ex.12 操控 input 元素的值
   // (1) 定義狀態變數
-  const [description, setdescription] = useState("TEST");
+  const [description, setDescription] = useState("TEST");
+  // Ex.13 操控 select 元素的值
+  // (1) 定義狀態變數
+  const [quantity, setQuantity] = useState(1);
 
   // Ex.11 點擊 <button> ADD 送出表單資料
   // (3) React 的事件函數，調用時會自動帶入事件參數 e
   function handleSubmit(e) {
     // (2) 送出資料時，防止頁面重新載入
     e.preventDefault();
-    console.log(e);
+    // (5) input 沒有輸入內容時，直接結束事件函數
+    if (!description) return;
+    // (4) 創建新 item 物件，儲存表單欄位的資料
+    const newItem = { description, quantity, packed: false, id: Date.now() };
+    console.log(newItem); // 印出看一看
+    // (6) 將表單元素恢復輸入前
+    setDescription("");
+    setQuantity(1);
   }
 
   return (
@@ -38,8 +48,14 @@ function Form() {
     // (1) 監聽 submit 事件
     <form className="add-form" onSubmit={handleSubmit}>
       <h3>What do you need for your 😍 trip?</h3>
-      {/* Ex.10 連續渲染20個 <option> */}
-      <select>
+      {/* Ex.13 */}
+      {/* (2) 綁定狀態變數到 select 的值 */}
+      {/* (3) 監聽 change 事件，select 內容一有變動，改變狀態變數(觸發重新渲染) */}
+      <select
+        value={quantity}
+        onChange={(e) => setQuantity(Number(e.target.value))}
+      >
+        {/* Ex.10 連續渲染20個 <option> */}
         {/* (1) Array.from() 建立一個 array 包含元素1~20 */}
         {/* (2) xxx.map() 來連續渲染20個 <option> */}
         {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
@@ -51,12 +67,12 @@ function Form() {
       </select>
       {/* Ex.12 */}
       {/* (2) 綁定狀態變數到 input 的值 */}
-      {/* (3) onChange 事件監聽，文字一有變動就改變狀態變數 */}
+      {/* (3) 監聽 change 事件，input 內容一有變動，改變狀態變數(觸發重新渲染) */}
       <input
         type="text"
         placeholder="item..."
         value={description}
-        onChange={(e) => setdescription(e.target.value)}
+        onChange={(e) => setDescription(e.target.value)}
       />
       <button>ADD</button>
     </form>
