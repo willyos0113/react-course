@@ -28,6 +28,12 @@ function Form() {
   // (1) 定義狀態變數
   const [quantity, setQuantity] = useState(1);
 
+  const [items, setItems] = useState([]);
+
+  function handleAddItems(item) {
+    // 為了保持 items 的不變性，需要創建一個新的陣列
+    setItems((items) => [...items, item]);
+  }
   // Ex.11 點擊 <button> ADD 送出表單資料
   // (3) React 的事件函數，調用時會自動帶入事件參數 e
   function handleSubmit(e) {
@@ -38,6 +44,8 @@ function Form() {
     // (4) 創建新 item 物件，儲存表單欄位的資料
     const newItem = { description, quantity, packed: false, id: Date.now() };
     console.log(newItem); // 印出看一看
+    // 將表單資料 newItem 放入 items 這個 state 當中
+    handleAddItems(newItem);
     // (6) 將表單元素恢復輸入前
     setDescription("");
     setQuantity(1);
