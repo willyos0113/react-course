@@ -1,62 +1,44 @@
 import { FC } from "react";
-import { Props, Priority, TodoItem } from "./TodoItem";
+import { Priority, TodoItem } from "./TodoItem";
+import { getTodoItems, TodoItemModel } from "./utils/getTodoItems";
 
-export interface PropsLst {
-  propsLst: Props[];
-}
+export const TodoList: FC = () => {
+  // 3. 從資料源取得資料
+  const itemsLst: TodoItemModel[] = getTodoItems(10);
 
-export const TodoList: FC<PropsLst> = ({ propsLst }) => {
-  // 3. 分為 "高、中、低優先" 共3組
-  const highPriorityItems = propsLst.filter(
-    (item) => item.priority === Priority.HIGH
-  );
-  const mediumPriorityItems = propsLst.filter(
-    (item) => item.priority === Priority.MEDIUM
-  );
-  const lowPriorityItems = propsLst.filter(
-    (item) => item.priority === Priority.LOW
-  );
+  // 4. 判斷 "高、中、低優先" 共3個組別
+  const itemsToRender = (priorityLevel: Priority): JSX.Element[] => {
+    return itemsLst
+      .filter((item) => item.priority === priorityLevel)
+      .map((item) => <TodoItem {...item} />);
+  };
+
+  // 5. 判斷 "標題" 文字
+  const titleToRender = (priorityLevel: Priority): string => {
+    return priorityLevel === Priority.HIGH
+      ? "HIGH"
+      : priorityLevel === Priority.MEDIUM
+      ? "MEDIUM"
+      : priorityLevel === Priority.LOW
+      ? "LOW"
+      : "ERROR";
+  };
+
+  // 6. 迭代 Priority 渲染 高、中、低優先 共3個組別
+  const levelGroupToRender = Object.values(Priority)
+    .filter((prior) => typeof prior === "number")
+    .map((level) => (
+      <>
+        <p className="title is-4">{titleToRender(level)}</p>
+        <div className="columns is-multiline">{itemsToRender(level)}</div>
+        <hr className="has-background-grey-lighter my-4"></hr>
+      </>
+    ));
 
   return (
     <>
-      {/* 高優先 todo-item */}
-      <p className="title is-4">HIGH</p>
-      <div className="columns is-multiline">
-        {highPriorityItems.map((props: Props) => (
-          <TodoItem
-            title={props.title}
-            content={props.content}
-            priority={props.priority}
-            resolved={props.resolved}
-          />
-        ))}
-      </div>
-      <hr className="has-background-grey-lighter my-4"></hr>
-      {/* 中優先 todo-item */}
-      <p className="title is-4">MEDIUM</p>
-      <div className="columns is-multiline">
-        {mediumPriorityItems.map((props: Props) => (
-          <TodoItem
-            title={props.title}
-            content={props.content}
-            priority={props.priority}
-            resolved={props.resolved}
-          />
-        ))}
-      </div>
-      <hr className="has-background-grey-lighter my-4"></hr>
-      {/* 低優先 todo-item */}
-      <p className="title is-4">LOW</p>
-      <div className="columns is-multiline">
-        {lowPriorityItems.map((props: Props) => (
-          <TodoItem
-            title={props.title}
-            content={props.content}
-            priority={props.priority}
-            resolved={props.resolved}
-          />
-        ))}
-      </div>
+      {/* 某一優先順序的 todo-list */}
+      {levelGroupToRender}
     </>
   );
 };
