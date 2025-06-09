@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, JSX } from "react";
 import { Priority, TodoItem } from "./TodoItem";
 import { getTodoItems, TodoItemModel } from "./utils/getTodoItems";
 
