@@ -44,6 +44,19 @@ export const Editor: FC = () => {
           </div>
         </div>
       </div>
+      <div className="field">
+        <div className="control">
+          <textarea name="textarea" placeholder="content"></textarea>
+        </div>
+      </div>
+      <div className="field">
+        <div className="control">
+          <label className="checkbox">
+            <input type="checkbox" />
+            Resolved
+          </label>
+        </div>
+      </div>
     </div>
   );
 };
